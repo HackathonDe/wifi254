@@ -1,96 +1,92 @@
-// Tab Switching
-function switchTab(tabId, element) {
-  // Hide all content
-  document.querySelectorAll('.content').forEach(content => {
-    content.classList.add('hidden');
-  });
+// script.js
+document.addEventListener("DOMContentLoaded", () => {
 
-  // Remove active from all
-  document.querySelectorAll('.nav-item').forEach(item => {
-    item.classList.remove('active');
-  });
+  /* =========================
+     1. Navigation Tab Switch
+  ========================== */
+  const tabs = document.querySelectorAll(".nav-item");
+  const contents = document.querySelectorAll(".content");
 
-  // Show selected
-  document.getElementById(tabId).classList.remove('hidden');
+  window.switchTab = (tabId, el) => {
+    contents.forEach(c => c.classList.add("hidden"));
+    document.getElementById(tabId).classList.remove("hidden");
 
-  // Activate clicked
-  element.classList.add('active');
-}
+    tabs.forEach(t => t.classList.remove("active"));
+    el.classList.add("active");
+  };
 
-// Payment Modal Functions
-function openPaymentModal(packageName, packagePrice) {
-  document.getElementById('packageName').value = packageName;
-  document.getElementById('packagePrice').value = packagePrice;
-  document.getElementById('displayPackageName').value = packageName;
-  document.getElementById('displayPackagePrice').value = 'KSH ' + packagePrice;
-  document.getElementById('mpesaPhone').value = '';
-  document.getElementById('paymentModal').style.display = 'flex';
-  document.getElementById('mpesaPhone').focus();
-}
+  /* =========================
+     2. Payment Modal Handling
+  ========================== */
+  const modal = document.getElementById("paymentModal");
+  const packageNameInput = document.getElementById("packageName");
+  const packagePriceInput = document.getElementById("packagePrice");
+  const displayName = document.getElementById("displayPackageName");
+  const displayPrice = document.getElementById("displayPackagePrice");
 
-function closePaymentModal() {
-  document.getElementById('paymentModal').style.display = 'none';
-}
+  window.openPaymentModal = (name, price) => {
+    packageNameInput.value = name;
+    packagePriceInput.value = price;
+    displayName.value = name;
+    displayPrice.value = price;
+    modal.style.display = "flex";
+  };
 
-// Close modal when clicking outside
-window.onclick = function (event) {
-  const modal = document.getElementById('paymentModal');
-  if (event.target === modal) {
-    closePaymentModal();
-  }
-}
+  window.closePaymentModal = () => {
+    modal.style.display = "none";
+  };
 
-// Phone number formatting
-document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('mpesaPhone').addEventListener('input', function (e) {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.startsWith('7') && value.length <= 9) {
-      value = '254' + value;
+  /* Close modal if clicked outside */
+  window.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      closePaymentModal();
     }
-    e.target.value = value;
   });
 
-  // Handle form submission
-  document.getElementById('mpesaPaymentForm').addEventListener('submit', function (e) {
-    e.preventDefault();
+  /* =========================
+     3. Form Validation
+  ========================== */
+  const mpesaForm = document.getElementById("mpesaPaymentForm");
+  if (mpesaForm) {
+    mpesaForm.addEventListener("submit", (e) => {
+      const phoneInput = document.getElementById("mpesaPhone");
+      const phone = phoneInput.value.trim();
+      const pattern = /^254[17]\d{8}$/;
 
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const cancelBtn = this.querySelector('button[type="button"]');
-    const spinner = document.getElementById('paymentSpinner');
-    const originalBtnText = submitBtn.textContent;
+      if (!pattern.test(phone)) {
+        alert("Please enter a valid Kenyan phone number starting with 2547 or 2541.");
+        e.preventDefault();
+      }
+    });
+  }
 
-    // Show loading
-    submitBtn.disabled = true;
-    cancelBtn.disabled = true;
-    submitBtn.textContent = 'Processing...';
-    spinner.style.display = 'block';
+  /* =========================
+     4. Smooth Scroll to Top
+  ========================== */
+  const scrollTopBtn = document.createElement("button");
+  scrollTopBtn.id = "scroll-top";
+  scrollTopBtn.innerHTML = "↑";
+  document.body.appendChild(scrollTopBtn);
 
-    const formData = new FormData(this);
-
-    fetch(this.action, {
-      method: 'POST',
-      body: formData
-    })
-      .then(response => {
-        if (!response.ok) throw new Error('Network error');
-        return response.json();
-      })
-      .then(data => {
-        if (data.success) {
-          alert('Payment initiated successfully! Check your phone for M-Pesa prompt');
-          closePaymentModal();
-        } else {
-          throw new Error(data.message || 'Payment failed');
-        }
-      })
-      .catch(error => {
-        alert('Error: ' + error.message);
-      })
-      .finally(() => {
-        submitBtn.disabled = false;
-        cancelBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
-        spinner.style.display = 'none';
-      });
+  scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
+
+  window.addEventListener("scroll", () => {
+    scrollTopBtn.style.display = window.scrollY > 200 ? "block" : "none";
+  });
+
+  /* =========================
+     5. Fade-in Animations
+  ========================== */
+  const fadeElements = document.querySelectorAll(".fade-in");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  }, { threshold: 0.2 });
+
+  fadeElements.forEach(el => observer.observe(el));
 });
