@@ -8,20 +8,23 @@
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
             <h1>KenyaWiFi Pro</h1>
             <p>Affordable Internet Access</p>
         </div>
-        
+
+        <!-- Status -->
         <div class="status">Online</div>
-        
+
+        <!-- Navigation -->
         <div class="nav">
-            <div class="nav-item active" onclick="switchTab('voucher')">Voucher</div>
-            <div class="nav-item" onclick="switchTab('login')">Login</div>
-            <div class="nav-item" onclick="switchTab('reconnect')">Reconnect</div>
-            <div class="nav-item" onclick="switchTab('admin')">Admin</div>
+            <div class="nav-item active" onclick="switchTab('voucher', this)">Voucher</div>
+            <div class="nav-item" onclick="switchTab('login', this)">Login</div>
+            <div class="nav-item" onclick="switchTab('reconnect', this)">Reconnect</div>
+            <div class="nav-item" onclick="switchTab('admin', this)">Admin</div>
         </div>
-        
+
         <!-- Voucher Tab -->
         <div id="voucher" class="content">
             <h2 class="section-title">WiFi Access Login</h2>
@@ -79,11 +82,10 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Login Tab -->
         <div id="login" class="content hidden">
             <h2 class="section-title">WiFi Access Login</h2>
-            
             <div class="input-group">
                 <label>Username</label>
                 <input type="text" placeholder="Enter username">
@@ -97,55 +99,14 @@
             <button class="btn">Connect to WiFi</button>
             
             <div class="divider"></div>
-            
             <p style="text-align: center; font-size: 14px; color: #7f8c8d;">
                 Forgot password? <a href="#" style="color: var(--secondary-color);">Reset here</a>
             </p>
-            
-            <!-- Packages Section -->
-            <div class="packages-section">
-                <h3 class="packages-title">Available Packages</h3>
-                
-                <div class="package-grid">
-                    <div class="package-card">
-                        <div class="package-name">Hourly</div>
-                        <div class="package-price">KSH 50</div>
-                        <div class="package-duration">1 Hour Access</div>
-                        <div class="package-speed">10 Mbps</div>
-                        <button class="package-btn" onclick="openPaymentModal('Hourly', '50')">Buy Now</button>
-                    </div>
-                    
-                    <div class="package-card">
-                        <div class="package-name">Daily</div>
-                        <div class="package-price">KSH 200</div>
-                        <div class="package-duration">24 Hours Access</div>
-                        <div class="package-speed">15 Mbps</div>
-                        <button class="package-btn" onclick="openPaymentModal('Daily', '200')">Buy Now</button>
-                    </div>
-                    
-                    <div class="package-card">
-                        <div class="package-name">Weekly</div>
-                        <div class="package-price">KSH 1,000</div>
-                        <div class="package-duration">7 Days Access</div>
-                        <div class="package-speed">20 Mbps</div>
-                        <button class="package-btn" onclick="openPaymentModal('Weekly', '1000')">Buy Now</button>
-                    </div>
-                    
-                    <div class="package-card">
-                        <div class="package-name">Monthly</div>
-                        <div class="package-price">KSH 3,500</div>
-                        <div class="package-duration">30 Days Access</div>
-                        <div class="package-speed">25 Mbps</div>
-                        <button class="package-btn" onclick="openPaymentModal('Monthly', '3500')">Buy Now</button>
-                    </div>
-                </div>
-            </div>
         </div>
-        
+
         <!-- Reconnect Tab -->
         <div id="reconnect" class="content hidden">
             <h2 class="section-title">Reconnect Session</h2>
-            
             <div class="input-group">
                 <label>Username</label>
                 <input type="text" placeholder="Enter your username">
@@ -159,56 +120,15 @@
             <button class="btn">Reconnect</button>
             
             <div class="divider"></div>
-            
             <p style="text-align: center; font-size: 14px; color: #7f8c8d;">
                 Having issues? <a href="#" style="color: var(--secondary-color);">Contact support</a>
             </p>
-            
-            <!-- Packages Section -->
-            <div class="packages-section">
-                <h3 class="packages-title">Available Packages</h3>
-                
-                <div class="package-grid">
-                    <div class="package-card">
-                        <div class="package-name">Hourly</div>
-                        <div class="package-price">KSH 50</div>
-                        <div class="package-duration">1 Hour Access</div>
-                        <div class="package-speed">10 Mbps</div>
-                        <button class="package-btn" onclick="openPaymentModal('Hourly', '50')">Buy Now</button>
-                    </div>
-                    
-                    <div class="package-card">
-                        <div class="package-name">Daily</div>
-                        <div class="package-price">KSH 200</div>
-                        <div class="package-duration">24 Hours Access</div>
-                        <div class="package-speed">15 Mbps</div>
-                        <button class="package-btn" onclick="openPaymentModal('Daily', '200')">Buy Now</button>
-                    </div>
-                    
-                    <div class="package-card">
-                        <div class="package-name">Weekly</div>
-                        <div class="package-price">KSH 1,000</div>
-                        <div class="package-duration">7 Days Access</div>
-                        <div class="package-speed">20 Mbps</div>
-                        <button class="package-btn" onclick="openPaymentModal('Weekly', '1000')">Buy Now</button>
-                    </div>
-                    
-                    <div class="package-card">
-                        <div class="package-name">Monthly</div>
-                        <div class="package-price">KSH 3,500</div>
-                        <div class="package-duration">30 Days Access</div>
-                        <div class="package-speed">25 Mbps</div>
-                        <button class="package-btn" onclick="openPaymentModal('Monthly', '3500')">Buy Now</button>
-                    </div>
-                </div>
-            </div>
         </div>
-        
+
         <!-- Admin Tab -->
         <div id="admin" class="content hidden">
             <h2 class="section-title">Admin Login</h2>
             <p style="text-align: center; margin-bottom: 20px;">Access the administrative dashboard</p>
-            
             <div class="input-group">
                 <label>Username</label>
                 <input type="text" placeholder="Enter admin username">
@@ -220,9 +140,7 @@
             </div>
             
             <button class="btn btn-admin">Login</button>
-            
             <div class="divider"></div>
-            
             <p style="text-align: center; font-size: 14px; color: #7f8c8d;">
                 Authorized personnel only
             </p>
@@ -268,108 +186,7 @@
         </div>
     </div>
 
-    <script>
-        function switchTab(tabId) {
-            // Hide all content sections
-            document.querySelectorAll('.content').forEach(content => {
-                content.classList.add('hidden');
-            });
-            
-            // Remove active class from all nav items
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Show selected content
-            document.getElementById(tabId).classList.remove('hidden');
-            
-            // Add active class to clicked nav item
-            event.currentTarget.classList.add('active');
-        }
-        
-        // Initialize with voucher tab active
-        document.addEventListener('DOMContentLoaded', function() {
-            switchTab('voucher');
-        });
-
-        // Payment Modal Functions
-        function openPaymentModal(packageName, packagePrice) {
-            document.getElementById('packageName').value = packageName;
-            document.getElementById('packagePrice').value = packagePrice;
-            document.getElementById('displayPackageName').value = packageName;
-            document.getElementById('displayPackagePrice').value = 'KSH ' + packagePrice;
-            document.getElementById('mpesaPhone').value = '';
-            document.getElementById('paymentModal').style.display = 'flex';
-        }
-
-        function closePaymentModal() {
-            document.getElementById('paymentModal').style.display = 'none';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('paymentModal');
-            if (event.target == modal) {
-                closePaymentModal();
-            }
-        }
-
-        // Phone number formatting
-        document.getElementById('mpesaPhone').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.startsWith('7') && value.length <= 9) {
-                value = '254' + value;
-            }
-            e.target.value = value;
-        });
-
-        // Handle form submission
-        document.getElementById('mpesaPaymentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const cancelBtn = this.querySelector('button[type="button"]');
-            const spinner = document.getElementById('paymentSpinner');
-            const originalBtnText = submitBtn.textContent;
-            
-            // Show loading state
-            submitBtn.disabled = true;
-            cancelBtn.disabled = true;
-            submitBtn.textContent = 'Processing...';
-            spinner.style.display = 'block';
-            
-            // Collect form data
-            const formData = new FormData(this);
-            
-            // Send data to PHP
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert('Payment initiated successfully! Check your phone for M-Pesa prompt');
-                    closePaymentModal();
-                } else {
-                    throw new Error(data.message || 'Payment failed');
-                }
-            })
-            .catch(error => {
-                alert('Error: ' + error.message);
-            })
-            .finally(() => {
-                submitBtn.disabled = false;
-                cancelBtn.disabled = false;
-                submitBtn.textContent = originalBtnText;
-                spinner.style.display = 'none';
-            });
-        });
-    </script>
+    <!-- Link to JS -->
+    <script src="script.js"></script>
 </body>
 </html>
