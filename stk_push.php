@@ -1,6 +1,8 @@
 <?php
 // stk_push.php
 
+require_once __DIR__ . '/db.php'; // include DB connection
+
 // Safaricom Daraja credentials
 $consumerKey    = "YOUR_CONSUMER_KEY";      // replace with your actual Consumer Key
 $consumerSecret = "YOUR_CONSUMER_SECRET";   // replace with your actual Consumer Secret
@@ -70,8 +72,26 @@ curl_close($ch);
 
 $result = json_decode($response, true);
 
-// Step 5: Respond back to frontend
+// Step 5: Insert into DB + Respond to frontend
 if (isset($result['ResponseCode']) && $result['ResponseCode'] == "0") {
+  $merchantRequestId = $result['MerchantRequestID'] ?? '';
+  $checkoutRequestId = $result['CheckoutRequestID'] ?? '';
+
+  // Save pending transaction
+  $stmt = $pdo->prepare("INSERT INTO transactions 
+        (merchant_request_id, checkout_request_id, status, amount, phone, result_code, result_desc) 
+        VALUES (:mrid, :crid, 'pending', :amount, :phone, :rcode, :rdesc)
+        ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP");
+
+  $stmt->execute([
+    ':mrid'  => $merchantRequestId,
+    ':crid'  => $checkoutRequestId,
+    ':amount' => (float)$amount,
+    ':phone' => $phone,
+    ':rcode' => (int)($result['ResponseCode'] ?? 0),
+    ':rdesc' => $result['ResponseDescription'] ?? null,
+  ]);
+
   echo json_encode([
     "success" => true,
     "message" => "STK Push sent successfully. Enter your M-Pesa PIN on your phone."

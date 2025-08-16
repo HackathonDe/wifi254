@@ -1,11 +1,8 @@
 <?php
 // config.php
-
-// Database credentials
 define("DB_HOST", "localhost");
-define("DB_NAME", "your_db_name");
-define("DB_USER", "your_username");
-define("DB_PASS", "your_password");
+define("DB_NAME", "kenyawifi_pro");
+define("DB_USER", "kenyawifi_user");
+define("DB_PASS", "1234");
 
-// (Optional) timezone
 date_default_timezone_set("Africa/Nairobi");
