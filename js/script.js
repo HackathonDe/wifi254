@@ -1,6 +1,4 @@
-// script.js
 document.addEventListener("DOMContentLoaded", () => {
-
   /* =========================
      1. Navigation Tab Switch
   ========================== */
@@ -30,6 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
     displayName.value = name;
     displayPrice.value = price;
     modal.style.display = "flex";
+
+    // Clear previous messages
+    document.getElementById("paymentResult").innerHTML = "";
   };
 
   window.closePaymentModal = () => {
@@ -44,25 +45,107 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =========================
-     3. Form Validation
+     3. Form Submission Handling (STK Push)
   ========================== */
   const mpesaForm = document.getElementById("mpesaPaymentForm");
   if (mpesaForm) {
-    mpesaForm.addEventListener("submit", (e) => {
+    mpesaForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
       const phoneInput = document.getElementById("mpesaPhone");
       const phone = phoneInput.value.trim();
       const pattern = /^254[17]\d{8}$/;
 
       if (!pattern.test(phone)) {
         alert("Please enter a valid Kenyan phone number starting with 2547 or 2541.");
-        e.preventDefault();
+        return;
+      }
+
+      // Show spinner
+      const spinner = document.getElementById("paymentSpinner");
+      spinner.style.display = "block";
+
+      try {
+        const formData = new FormData(mpesaForm);
+        const response = await fetch("stk_push.php", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Display voucher/payment success message
+          const voucherHTML = `
+            <div class="voucher-result success">
+              <h3>Payment Successful!</h3>
+              <p>Transaction Code: ${result.transaction_code || "Pending"}</p>
+              <p>Voucher Code: <strong>${result.voucher_code || "Generated after confirmation"}</strong></p>
+              <p>Expiration: ${result.expiration || "TBD"}</p>
+              <p>Package: ${result.package || packageNameInput.value}</p>
+              <button class="btn" onclick="closePaymentModal()">Continue</button>
+            </div>
+          `;
+          document.getElementById("paymentResult").innerHTML = voucherHTML;
+        } else {
+          document.getElementById("paymentResult").innerHTML = `
+            <div class="voucher-result error">
+              <h3>Payment Failed</h3>
+              <p>${result.message || "STK Push request could not be processed."}</p>
+              ${result.errors ? `<ul>${result.errors.map(e => `<li>${e}</li>`).join("")}</ul>` : ""}
+              <button class="btn" onclick="document.getElementById('paymentResult').innerHTML=''">Try Again</button>
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        document.getElementById("paymentResult").innerHTML = `
+          <div class="voucher-result error">
+            <h3>Network Error</h3>
+            <p>Please check your connection and try again</p>
+          </div>
+        `;
+      } finally {
+        spinner.style.display = "none";
       }
     });
   }
 
   /* =========================
-     4. Smooth Scroll to Top
+     4. Voucher Connection
   ========================== */
+  const voucherForm = document.querySelector("#voucher form");
+  if (voucherForm) {
+    voucherForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const voucherInput = voucherForm.querySelector('input[type="text"]');
+      const voucherCode = voucherInput.value.trim();
+
+      if (!voucherCode) {
+        alert("Please enter a voucher code");
+        return;
+      }
+
+      const response = await fetch("connect.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ voucher_code: voucherCode })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert(`Connected successfully!\nExpires: ${result.expiration}`);
+      } else {
+        alert(`Connection failed: ${result.message}`);
+      }
+    });
+  }
+
+  /* =========================
+     5. UI Enhancements
+  ========================== */
+  // Scroll to top button
   const scrollTopBtn = document.createElement("button");
   scrollTopBtn.id = "scroll-top";
   scrollTopBtn.innerHTML = "↑";
@@ -76,17 +159,18 @@ document.addEventListener("DOMContentLoaded", () => {
     scrollTopBtn.style.display = window.scrollY > 200 ? "block" : "none";
   });
 
-  /* =========================
-     5. Fade-in Animations
-  ========================== */
+  // Fade-in animations
   const fadeElements = document.querySelectorAll(".fade-in");
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-      }
-    });
-  }, { threshold: 0.2 });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
 
-  fadeElements.forEach(el => observer.observe(el));
+  fadeElements.forEach((el) => observer.observe(el));
 });
